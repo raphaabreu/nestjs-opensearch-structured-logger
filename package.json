@@ -1,5 +1,5 @@
 {
-  "name": "structured-logger",
+  "name": "@raphaabreu/nestjs-opensearch-structured-logger",
   "version": "1.0.0",
   "description": "Structured logger module for nest-js with bindings to OpenSearch using Winston",
   "main": "lib/index.js",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/raphaabreu/structured-logger.git"
+    "url": "git+https://github.com/raphaabreu/nestjs-opensearch-structured-logger.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Raphael Lorenzeto de Abreu <raphael.lorenzeto@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/raphaabreu/structured-logger/issues"
+    "url": "https://github.com/raphaabreu/nestjs-opensearch-structured-logger/issues"
   },
-  "homepage": "https://github.com/raphaabreu/structured-logger#readme",
+  "homepage": "https://github.com/raphaabreu/nestjs-opensearch-structured-logger#readme",
   "devDependencies": {
     "prettier": "^2.4.1",
     "tslint": "^6.1.3",
