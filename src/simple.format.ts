@@ -1,4 +1,4 @@
-import winston, { format } from 'winston';
+import { format } from 'winston';
 
 export const simple = format.printf((info) => {
   const { level, timestamp } = info;
@@ -10,7 +10,7 @@ export const simple = format.printf((info) => {
   if (message && (message as any).message) {
     message = (message as any).message as string;
   }
-  if (typeof context == 'object') {
+  if (typeof context === 'object') {
     context = undefined;
   }
 

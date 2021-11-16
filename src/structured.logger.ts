@@ -61,19 +61,19 @@ export class StructuredLogger extends Logger {
   }
 
   private formatMessage(message: any, values: any[]): any {
-    let message_str = String(message);
+    let messageStr = String(message);
     let data: any = {
-      message: message_str,
+      message: messageStr,
       context: this.context,
     };
 
-    const placeholders = [...((message_str as any).matchAll(PLACEHOLDER_REGEX) as string[])];
+    const placeholders = [...((messageStr as any).matchAll(PLACEHOLDER_REGEX) as string[])];
 
     if (placeholders.length > 0) {
       data = {
         ...data,
         fields: {},
-        messageTemplate: message_str,
+        messageTemplate: messageStr,
       };
 
       for (let index = 0; index < placeholders.length; index++) {
@@ -82,7 +82,7 @@ export class StructuredLogger extends Logger {
         const placeholderName = placeholder[1];
 
         if (index > values.length) {
-          throw new Error(`You must provide one value for each placeholder used for message template "${message_str}"`);
+          throw new Error(`You must provide one value for each placeholder used for message template "${messageStr}"`);
         }
 
         const value = values[index];
@@ -95,11 +95,11 @@ export class StructuredLogger extends Logger {
           },
         };
 
-        const value_str = String(value);
+        const valueStr = String(value);
 
-        message_str = message_str.replace(
+        messageStr = messageStr.replace(
           placeholderMatch,
-          value_str.substring(0, 100) + (value_str.length > 100 ? '...' : ''),
+          valueStr.substring(0, 100) + (valueStr.length > 100 ? '...' : ''),
         );
       }
     }
@@ -114,6 +114,6 @@ export class StructuredLogger extends Logger {
       };
     }
 
-    return { ...data, message: message_str };
+    return { ...data, message: messageStr };
   }
 }

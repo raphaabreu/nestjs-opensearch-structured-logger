@@ -15,7 +15,7 @@ export function structuredTransformer(logData: LogData) {
     logData.meta = { ...logData.meta, ...extra };
   }
 
-  if (logData.meta && logData.meta.context && typeof logData.meta.context == 'object') {
+  if (logData.meta && logData.meta.context && typeof logData.meta.context === 'object') {
     logData.meta = {
       ...logData.meta,
       ...logData.meta.context,
