@@ -3,11 +3,18 @@ import { Logger } from '@nestjs/common';
 // eslint-disable-next-line no-useless-escape
 const PLACEHOLDER_REGEX = /\$\{([^\}\$\{]+)\}/g;
 
-export class StructuredLogger extends Logger {
+export class StructuredLogger {
   private scope: any;
+  private context: string;
+  private logger: Logger;
 
   constructor(context: string) {
-    super(context);
+    this.setContext(context);
+  }
+
+  setContext(context: string) {
+    this.context = context;
+    this.logger = new Logger(context);
   }
 
   createScope(scope: { [key: string]: string | number | boolean }) {
@@ -29,7 +36,7 @@ export class StructuredLogger extends Logger {
   }
 
   log(message: any, ...values: any[]) {
-    super.log(this.formatMessage(message, values));
+    this.logger.log(this.formatMessage(message, values));
   }
 
   error(message: any, error: string | Error, ...values: any[]) {
@@ -45,19 +52,19 @@ export class StructuredLogger extends Logger {
         formattedMessage.error = error;
       }
     }
-    super.error(formattedMessage);
+    this.logger.error(formattedMessage);
   }
 
   warn(message: any, ...values: any[]) {
-    super.warn(this.formatMessage(message, values));
+    this.logger.warn(this.formatMessage(message, values));
   }
 
   debug(message: any, ...values: any[]) {
-    super.debug(this.formatMessage(message, values));
+    this.logger.debug(this.formatMessage(message, values));
   }
 
   verbose(message: any, ...values: any[]) {
-    super.verbose(this.formatMessage(message, values));
+    this.logger.verbose(this.formatMessage(message, values));
   }
 
   private formatMessage(message: any, values: any[]): any {
