@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "rootDir": "src",
     "sourceMap": true,
     "moduleResolution": "node",
-    "target": "es2015",
-    "module": "esnext",
+    "target": "es6",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "declaration": true,
