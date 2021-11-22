@@ -44,7 +44,7 @@ export class StructuredLoggingModule {
       client: new Client({
         node: process.env.ELASTIC_LOG || 'http://localhost:9200',
       }) as any,
-      level: 'debug',
+      level: process.env.ELASTIC_LOG_LEVEL || 'debug',
       indexPrefix: 'logs.' + options.serviceInfo.name,
       transformer: structuredTransformer,
       bufferLimit: 1000,
@@ -53,7 +53,13 @@ export class StructuredLoggingModule {
       ...options,
     };
 
-    return new ElasticsearchTransport(options);
+    const transport = new ElasticsearchTransport(options);
+
+    transport.on('error', (error) => {
+      console.error('Error in Elastic Search transport', error);
+    });
+
+    return transport;
   }
 
   static formatForConsole(colorize = true): winston.Logform.Format {
