@@ -5,7 +5,7 @@ import os from 'os';
 import { structuredTransformer } from './structured.transformer';
 import { ElasticsearchTransport, ElasticsearchTransportOptions } from 'winston-elasticsearch';
 import { simple } from './simple.format';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { StructuredLoggerFactory } from './structured-logger.factory';
 
 export type ServiceInfo = {
@@ -18,6 +18,7 @@ export type StructuredLoggingOptions = {
   serviceInfo: ServiceInfo;
 } & ElasticsearchTransportOptions;
 
+@Global()
 @Module({
   providers: [StructuredLoggerFactory],
   exports: [StructuredLoggerFactory],
