@@ -56,6 +56,7 @@ export class StructuredLoggingModule {
     const transport = new ElasticsearchTransport(options);
 
     transport.on('error', (error) => {
+      // tslint:disable-next-line:no-console
       console.error('Error in Elastic Search transport', error);
     });
 
