@@ -31,6 +31,7 @@ export class StructuredLoggingModule {
       transports: [
         new winston.transports.Console({
           format: StructuredLoggingModule.formatForConsole(options.serviceInfo.debugMode),
+          level: process.env.CONSOLE_LOG_LEVEL || 'info',
         }),
         esTransport,
       ],
