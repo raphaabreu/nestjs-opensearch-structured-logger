@@ -14,7 +14,7 @@ export type ServiceInfo = {
   organization?: string;
   product?: string;
   domain: string;
-  service: string;
+  name: string;
   version?: string;
   debugMode?: boolean;
 };
@@ -31,11 +31,11 @@ export type StructuredLoggingOptions = {
 export class StructuredLoggingModule {
   static bootstrap(options: StructuredLoggingOptions, loggerOptions?: winston.LoggerOptions): WinstonLoggerService {
     options.serviceInfo = {
-      region: String(process.env.AWS_REGION),
+      region: String(process.env.AWS_REGION || 'unknown'),
       environment: String(process.env.ENVIRONMENT || process.env.NODE_ENV),
-      product: String(process.env.PRODUCT),
-      organization: String(process.env.ORGANIZATION),
-      version: String(process.env.BUILD_NUMBER),
+      product: String(process.env.PRODUCT || ''),
+      organization: String(process.env.ORGANIZATION || ''),
+      version: String(process.env.BUILD_NUMBER || 'unknown'),
 
       ...options.serviceInfo,
     };
@@ -64,7 +64,7 @@ export class StructuredLoggingModule {
     if (options.serviceInfo.product) {
       index += options.serviceInfo.product + '.';
     }
-    index += options.serviceInfo.domain + '.' + options.serviceInfo.service;
+    index += options.serviceInfo.domain + '.' + options.serviceInfo.name;
 
     options = {
       client: new Client({
@@ -102,7 +102,7 @@ export class StructuredLoggingModule {
   static createLogger(options: ServiceInfo, loggerOptions?: winston.LoggerOptions): WinstonLoggerService {
     loggerOptions = {
       defaultMeta: {
-        service: `${options.domain}.${options.service}`,
+        service: `${options.domain}.${options.name}`,
         version: String(options.version),
         domain: String(options.domain),
         product: String(options.product),
