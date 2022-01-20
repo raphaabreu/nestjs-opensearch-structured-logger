@@ -9,8 +9,13 @@ import { Global, Module } from '@nestjs/common';
 import { StructuredLoggerFactory } from './structured-logger.factory';
 
 export type ServiceInfo = {
-  name: string;
-  version: string;
+  region?: string;
+  environment?: string;
+  organization?: string;
+  product?: string;
+  domain: string;
+  service: string;
+  version?: string;
   debugMode?: boolean;
 };
 
@@ -25,6 +30,16 @@ export type StructuredLoggingOptions = {
 })
 export class StructuredLoggingModule {
   static bootstrap(options: StructuredLoggingOptions, loggerOptions?: winston.LoggerOptions): WinstonLoggerService {
+    options.serviceInfo = {
+      region: String(process.env.AWS_REGION),
+      environment: String(process.env.ENVIRONMENT || process.env.NODE_ENV),
+      product: String(process.env.PRODUCT),
+      organization: String(process.env.ORGANIZATION),
+      version: String(process.env.BUILD_NUMBER),
+
+      ...options.serviceInfo,
+    };
+
     const esTransport = StructuredLoggingModule.createElasticTransport(options);
 
     const winstonLoggerService = this.createLogger(options.serviceInfo, {
@@ -42,12 +57,21 @@ export class StructuredLoggingModule {
   }
 
   static createElasticTransport(options: StructuredLoggingOptions): ElasticsearchTransport {
+    let index = 'nodelogs.';
+    if (options.serviceInfo.organization) {
+      index += options.serviceInfo.organization + '.';
+    }
+    if (options.serviceInfo.product) {
+      index += options.serviceInfo.product + '.';
+    }
+    index += options.serviceInfo.domain + '.' + options.serviceInfo.service;
+
     options = {
       client: new Client({
         node: process.env.ELASTIC_LOG || 'http://localhost:9200',
       }) as any,
       level: process.env.ELASTIC_LOG_LEVEL || 'debug',
-      indexPrefix: 'logs.' + options.serviceInfo.name,
+      indexPrefix: index,
       transformer: structuredTransformer,
       bufferLimit: 1000,
       retryLimit: 0,
@@ -78,14 +102,15 @@ export class StructuredLoggingModule {
   static createLogger(options: ServiceInfo, loggerOptions?: winston.LoggerOptions): WinstonLoggerService {
     loggerOptions = {
       defaultMeta: {
-        service: {
-          name: String(options.name),
-          version: String(options.version),
-          environment: String(process.env.NODE_ENV),
-          region: String(process.env.AWS_REGION),
-          hostName: String(os.hostname()),
-          pid: process.pid,
-        },
+        service: `${options.domain}.${options.service}`,
+        version: String(options.version),
+        domain: String(options.domain),
+        product: String(options.product),
+        organization: String(options.organization),
+        environment: String(options.environment),
+        region: String(options.environment),
+        hostName: String(os.hostname()),
+        pid: process.pid,
       },
 
       ...loggerOptions,
