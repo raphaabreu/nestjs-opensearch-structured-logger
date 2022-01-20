@@ -108,7 +108,7 @@ export class StructuredLoggingModule {
         product: String(options.product),
         organization: String(options.organization),
         environment: String(options.environment),
-        region: String(options.environment),
+        region: String(options.region),
         hostName: String(os.hostname()),
         pid: process.pid,
       },
