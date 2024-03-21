@@ -79,14 +79,7 @@ export class StructuredLoggingModule {
       ...options,
     };
 
-    const transport = new ElasticsearchTransport(options);
-
-    transport.on('error', (error) => {
-      // tslint:disable-next-line:no-console
-      console.error('Error in Elastic Search transport', error);
-    });
-
-    return transport;
+    return new ElasticsearchTransport(options);
   }
 
   static formatForConsole(colorize = true): winston.Logform.Format {
@@ -116,6 +109,8 @@ export class StructuredLoggingModule {
       ...loggerOptions,
     };
 
-    return new WinstonLoggerService(loggerOptions);
+    const logger = new WinstonLoggerService(loggerOptions);
+
+    return logger;
   }
 }

@@ -2,26 +2,26 @@ import { LoggerService } from '@nestjs/common';
 import { createLogger, LoggerOptions, Logger as WinstonLogger } from 'winston';
 
 export class WinstonLoggerService implements LoggerService {
-  private logger: WinstonLogger;
+  public inner: WinstonLogger;
 
   constructor(config: LoggerOptions) {
-    this.logger = createLogger(config);
+    this.inner = createLogger(config);
   }
 
   log(message: string, context?: string) {
-    this.logger.info(this.formatMessage(message, context));
+    this.inner.info(this.formatMessage(message, context));
   }
   error(message: string, trace: string, context?: string) {
-    this.logger.error({ ...this.formatMessage(message, context), trace });
+    this.inner.error({ ...this.formatMessage(message, context), trace });
   }
   warn(message: string, context?: string) {
-    this.logger.warn(this.formatMessage(message, context));
+    this.inner.warn(this.formatMessage(message, context));
   }
   debug(message: string, context?: string) {
-    this.logger.debug(this.formatMessage(message, context));
+    this.inner.debug(this.formatMessage(message, context));
   }
   verbose(message: string, context?: string) {
-    this.logger.verbose(this.formatMessage(message, context));
+    this.inner.verbose(this.formatMessage(message, context));
   }
 
   private formatMessage(message: string | any, context?: string) {
