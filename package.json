@@ -1,6 +1,6 @@
 {
   "name": "@raphaabreu/nestjs-opensearch-structured-logger",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "Structured logger module for nest-js with bindings to OpenSearch using Winston",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
