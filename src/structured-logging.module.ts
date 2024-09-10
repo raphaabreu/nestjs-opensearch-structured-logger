@@ -7,6 +7,7 @@ import { ElasticsearchTransport, ElasticsearchTransportOptions } from 'winston-e
 import { simple } from './simple.format';
 import { Global, Module } from '@nestjs/common';
 import { StructuredLoggerFactory } from './structured-logger.factory';
+import { prefixesForLoggers, StructuredLogger } from './structured.logger';
 
 export type ServiceInfo = {
   region?: string;
@@ -112,5 +113,22 @@ export class StructuredLoggingModule {
     const logger = new WinstonLoggerService(loggerOptions);
 
     return logger;
+  }
+
+  static forRoot(): DynamicModule {
+    const providers = [...prefixesForLoggers].map(prefix => {
+      return {
+        provide: `StructuredLogger$${prefix.name}`,
+        useFactory: () => {
+          return new StructuredLogger(prefix.name);
+        }
+      }
+    });
+
+    return {
+      module: StructuredLoggingModule,
+      providers: providers,
+      exports: providers,
+    };
   }
 }
