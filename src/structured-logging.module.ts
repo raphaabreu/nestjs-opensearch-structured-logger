@@ -5,7 +5,7 @@ import os from 'os';
 import { structuredTransformer } from './structured.transformer';
 import { ElasticsearchTransport, ElasticsearchTransportOptions } from 'winston-elasticsearch';
 import { simple } from './simple.format';
-import { Global, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { StructuredLoggerFactory } from './structured-logger.factory';
 import { prefixesForLoggers, StructuredLogger } from './structured.logger';
 
@@ -116,18 +116,18 @@ export class StructuredLoggingModule {
   }
 
   static forRoot(): DynamicModule {
-    const providers = [...prefixesForLoggers].map(prefix => {
+    const providers = [...prefixesForLoggers].map((prefix) => {
       return {
         provide: `StructuredLogger$${prefix.name}`,
         useFactory: () => {
           return new StructuredLogger(prefix.name);
-        }
-      }
+        },
+      };
     });
 
     return {
       module: StructuredLoggingModule,
-      providers: providers,
+      providers,
       exports: providers,
     };
   }
