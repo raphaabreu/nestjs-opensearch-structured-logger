@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 
 // eslint-disable-next-line no-useless-escape
 const PLACEHOLDER_REGEX = /\$\{([^\}\$\{]+)\}/g;
@@ -124,3 +124,15 @@ export class StructuredLogger {
     return { ...data, message: messageStr };
   }
 }
+
+export const prefixesForLoggers = new Set<Function>();
+
+export type ObjectType<T> = | { new(): T; } | Function;
+
+export const InjectLogger = (
+  entity: Function
+): ReturnType<typeof Inject> => {
+  prefixesForLoggers.add(entity);
+
+  return Inject(`StructuredLogger$${entity.name}`);
+};
