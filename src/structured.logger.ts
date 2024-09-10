@@ -125,14 +125,14 @@ export class StructuredLogger {
   }
 }
 
-export type ObjectType<T> = | { new (): T; } | Function;
+export const prefixesForLoggers = new Set<Function>();
 
-export class TypedStructuredLogger<Service> extends StructuredLogger {
-  constructor(target: ObjectType<Service>) {
-    super(target.name);
-  }
-}
+export type ObjectType<T> = | { new(): T; } | Function;
 
 export const InjectLogger = (
   entity: Function
-): ReturnType<typeof Inject> => Inject(new TypedStructuredLogger(entity));
+): ReturnType<typeof Inject> => {
+  prefixesForLoggers.add(entity);
+
+  return Inject(`StructuredLogger$${entity.name}`);
+};
