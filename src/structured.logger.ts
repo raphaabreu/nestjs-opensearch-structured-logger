@@ -125,10 +125,11 @@ export class StructuredLogger {
   }
 }
 
-export const prefixesForLoggers = new Set<() => void>();
+export const prefixesForLoggers = new Set<Function>();
 
-export const InjectLogger = (entity: () => void): ReturnType<typeof Inject> => {
-  prefixesForLoggers.add(entity);
-
-  return Inject(`StructuredLogger$${entity.name}`);
+export const InjectLogger = (): ReturnType<typeof Inject> => {
+  return (target: Function, key: string | symbol, index?: number) => {
+    prefixesForLoggers.add(target);
+    return Inject(`StructuredLogger$${target.name}`)(target, key, index);
+  };
 };
