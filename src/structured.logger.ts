@@ -125,9 +125,11 @@ export class StructuredLogger {
   }
 }
 
+// tslint:disable-next-line:ban-types
 export const prefixesForLoggers = new Set<Function>();
 
 export const InjectLogger = (): ReturnType<typeof Inject> => {
+  // tslint:disable-next-line:ban-types
   return (target: Function, key: string | symbol, index?: number) => {
     prefixesForLoggers.add(target);
     return Inject(`StructuredLogger$${target.name}`)(target, key, index);
